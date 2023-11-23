@@ -1,0 +1,22 @@
+% 定义方程和其导数
+f = @(x) x^2 - 4;  % 方程
+df = @(x) 2 * x;    % 方程的导数
+
+% 初始猜测值
+x0 = 2;
+
+% 迭代
+max_iterations = 100; % 最大迭代次数
+tolerance = 1e-6;     % 迭代精度
+
+for i = 1:max_iterations
+    x1 = x0 - f(x0) / df(x0); % 牛顿切线法的迭代公式
+    if abs(x1 - x0) < tolerance
+        break; % 达到迭代精度，退出循环
+    end
+    x0 = x1; % 更新迭代值
+end
+
+root = x1; % 得到方程的根
+
+disp(['方程的根为: ', num2str(root)]);
