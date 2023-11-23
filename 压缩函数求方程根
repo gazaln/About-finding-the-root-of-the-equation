@@ -1,0 +1,20 @@
+% 构造压缩函数
+compression_function = @(x) x - (x^2 - 4) / (2 * x);
+
+% 初值设定
+x0 = 2; % 初始猜测值
+
+% 迭代
+max_iterations = 100; % 最大迭代次数
+tolerance = 1e-6; % 迭代精度
+
+for i = 1:max_iterations
+    x1 = compression_function(x0); % 使用压缩函数进行迭代
+    if abs(x1 - x0) < tolerance
+        break; % 达到迭代精度，退出循环
+    end
+    x0 = x1; % 更新迭代值
+end
+
+root = x1; % 得到方程的根
+disp(['方程的根为: ', num2str(root)]);
