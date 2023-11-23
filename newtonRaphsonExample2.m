@@ -1,21 +1,24 @@
-function root = binarySearchImprovedPlot(a, b, tol, maxIter)
-    % 修正二分法示例：求解 e^(-x^2) + sin(x) = 0
+function root = newtonRaphsonImprovedPlot(x0, tol, maxIter)
+    % 修正牛顿切线法示例：求解 e^(-x^2) + sin(x) = 0，并绘制迭代过程
     
-    % 定义方程
+    % 定义方程及其导数
     f = @(x) exp(-x.^2) + sin(x);
+    df = @(x) -2*x.*exp(-x.^2) + cos(x);
     
     % 初始化数组以保存迭代过程中的点
     iterPoints = zeros(1, maxIter);
     
     for i = 1:maxIter
-        c = (a + b) / 2;
+        x1 = x0 - f(x0) / df(x0);
         
         % 记录当前迭代点
-        iterPoints(i) = c;
+        iterPoints(i) = x1;
         
-        % 判断解是否满足收敛条件
-        if abs(f(c)) < tol
-            root = c;
+        % 计算相对误差
+        relativeError = abs(x1 - x0) / max(1, abs(x1));
+        
+        if relativeError < tol
+            root = x1;
             
             % 绘图
             plotIteration(iterPoints, f);
@@ -23,15 +26,10 @@ function root = binarySearchImprovedPlot(a, b, tol, maxIter)
             return;
         end
         
-        % 调整搜索区间
-        if sign(f(c)) == sign(f(a))
-            a = c;
-        else
-            b = c;
-        end
+        x0 = x1;
     end
     
-    error('未收敛到根，请增加迭代次数或修改搜索区间。');
+    error('未收敛到根，请增加迭代次数或修改初始猜测。');
 end
 
 function plotIteration(iterPoints, f)
@@ -45,10 +43,11 @@ function plotIteration(iterPoints, f)
     hold on;
     plot(iterPoints, f(iterPoints), 'ro-', 'MarkerSize', 8, 'LineWidth', 1.5);
     
-    title('二分法迭代过程');
+    title('牛顿切线法迭代过程');
     xlabel('x');
     ylabel('f(x)');
     grid on;
     legend('方程曲线', '迭代点');
     hold off;
 end
+
